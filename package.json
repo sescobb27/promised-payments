@@ -1,0 +1,28 @@
+{
+  "name": "promised-payments",
+  "version": "1.0.0",
+  "description": "MedJS workshop Handling payments with promises",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sescobb27/promised-payments.git"
+  },
+  "keywords": [
+    "promise",
+    "payments",
+    "stripe"
+  ],
+  "author": "Simon Escobar B",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sescobb27/promised-payments/issues"
+  },
+  "homepage": "https://github.com/sescobb27/promised-payments#readme",
+  "dependencies": {
+    "bluebird": "^3.4.0",
+    "stripe": "^4.6.0"
+  }
+}
