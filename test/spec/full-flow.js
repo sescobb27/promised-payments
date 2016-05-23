@@ -49,7 +49,7 @@ describe('Purchase Flow', function () {
       });
   });
 
-  it('should have non-empty order', function () {
+  it('should have non-empty details', function () {
     orders.forEach((order) => {
       expect(order.details.length).to.equal(1);
     });
