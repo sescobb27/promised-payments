@@ -1,0 +1,5 @@
+--ui bdd
+--reporter spec
+-r test/helper/setup
+-t 8000
+-G
