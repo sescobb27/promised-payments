@@ -79,4 +79,6 @@ describe('Payment Flow', function () {
         });
       });
   });
+
+  it.skip('add balance to stripe account', function () {});
 });

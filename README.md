@@ -19,6 +19,16 @@ npm install chai chai-as-promised mocha mocha-jenkins-reporter --save-dev
   * 20 usd monthly subscription
   * 200 usd yearly subscription
 
+# Design
+Customer has many Orders
+Orders belongs to Customer
+Order has many details
+Detail belongs to Order
+Detail has one Product
+
+Services
+Billing Service has one payment gateway (this time is coupled to Stripe) but is testable enough, you can use the adapter pattern to be gateway agnostic so you can change it with whatever payment gateway you want.
+
 # Models
 1. mkdir lib/models
 2. create lib/models/customer.js
@@ -56,3 +66,19 @@ npm install chai chai-as-promised mocha mocha-jenkins-reporter --save-dev
     * All customers should have a stripe account
     * We can charge 20usd to each account
     * We can create stripe subscription on those who have a plan
+
+# For home
+* Implement and Test `addBalance` to customer's stripe acount
+* how can we implement shipping? tip (address model and refactor order's total price calculation)
+
+#### And that's how we implement a mini-ecommerce Domain Logic, we just need to setup anything to handle request (plain node, express, sails, hapi, meteor etc) and a DB (SQL/NoSQL/whatever), then plug your Domain Logic with them and just it, we are Server/DB agnostic.
+
+# Tips:
+* Do not broke Promise chain
+* Always return the same result type
+* If you're already in a promise do not try to avoid it, just keep the flow
+* Always try to compose Promises e.g (`createAccountToCustomer`)
+* Prefer little composable/testable promises
+* We are not handling errors here but you MUST do it
+* Always TEST your code
+* Use real interactions in acceptance tests when dealing with money you don't want to extra charge or nor charge at all your customers.
