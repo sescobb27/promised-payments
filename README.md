@@ -55,8 +55,8 @@ Billing Service has one payment gateway (this time is coupled to Stripe) but is 
   * `createAccountToCustomer(creditCard, customer)` this should call `createToken` then `createAccount` in a promised way
   * `createAccount(customer, stripeToken)`
   * `createSubscription(customer)`
-  * `addBalance(customer, amount)`
-  * `charge(customer, amount)`
+  * `refund(customer, order)`
+  * `charge(customer, order)`
   * `getCharges(customer)`
 3. Add payment-flow acceptance tests
   * STEPS:
@@ -68,7 +68,7 @@ Billing Service has one payment gateway (this time is coupled to Stripe) but is 
     * We can create stripe subscription on those who have a plan
 
 # For home
-* Implement and Test `addBalance` to customer's stripe acount
+* Implement and Test customer's order `refund`
 * how can we implement shipping? tip (address model and refactor order's total price calculation)
 
 #### And that's how we implement a mini-ecommerce Domain Logic, we just need to setup anything to handle request (plain node, express, sails, hapi, meteor etc) and a DB (SQL/NoSQL/whatever), then plug your Domain Logic with them and just it, we are Server/DB agnostic.
