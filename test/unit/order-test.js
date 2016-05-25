@@ -31,11 +31,29 @@ describe('Order', function () {
       });
   });
 
+  it('should get details async', function () {
+    let order = new Order();
+    let savePromises = details.map((detail) => {
+      return order.addDetail(detail);
+    });
+    return Promise.all(savePromises)
+      .then(() => {
+        return order.findDetails();
+      })
+      .then((orderDetails) => {
+        expect(orderDetails).to.deep.equal(details);
+      });
+  });
+
+
   it('should calculate total price', function () {
     let order = new Order(null, details);
     return order.save()
       .then((newOrder) => {
-        expect(newOrder.totalPrice()).to.equal(9000);
+        return newOrder.totalPrice();
+      })
+      .then((total) => {
+        expect(total).to.equal(9000);
       });
   });
 
