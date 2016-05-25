@@ -2,6 +2,9 @@
 
 let fixtures = require('../helper/fixtures');
 let Customer = require('../../lib/models/customer');
+let Order = require('../../lib/models/order');
+let Detail = require('../../lib/models/detail');
+let Product = require('../../lib/models/product');
 let Promise = require("bluebird");
 let _ = require('lodash');
 
@@ -49,8 +52,15 @@ describe('Payment Flow', function () {
   });
 
   it('we can charge stripe account', function () {
+    let order = new Order();
+    // Emulate order's total price calculation so we ensure given a customer and
+    // a order we charge the correct price
+    let stubOrder = sinon.stub(order, 'totalPrice')
+      .returns(new Promise((resolve) => {
+        resolve(2000);
+      }));
     let promisedCharges = customers.map((customer) => {
-      return paymentService.charge(customer, 2000);
+      return paymentService.charge(customer, order);
     });
     return Promise.all(promisedCharges)
       .then((charges) => {
@@ -60,6 +70,7 @@ describe('Payment Flow', function () {
           expect(charge.paid).to.equal(true);
           expect(charge.status).to.equal('succeeded');
         });
+        stubOrder.restore();
       });
   });
 
@@ -80,5 +91,31 @@ describe('Payment Flow', function () {
       });
   });
 
-  it.skip('add balance to stripe account', function () {});
+  describe('Customer with order', function () {
+    let product;
+    let detail;
+    let customer;
+    let order;
+    beforeEach(() => {
+      // MOCK Models
+      let productFixture = _.sample(fixtures.products);
+      product = new Product(productFixture.title, productFixture.amount);
+      detail = new Detail(product, 1);
+      customer = _.sample(customers);
+      order = new Order(customer, [detail]);
+      customer.orders = [order];
+      return customer.save()
+        .then((dbCustomer) => {
+          return paymentService.charge(dbCustomer, order);
+        });
+    });
+
+    it('we should refund customer\'s order', function () {
+      return paymentService.refund(customer, order)
+        .then((stripeAccount) => {
+          expect(stripeAccount.account_balance).to.equal(-product.amount);
+          expect(stripeAccount.email).to.equal(customer.email);
+        });
+    });
+  });
 });
